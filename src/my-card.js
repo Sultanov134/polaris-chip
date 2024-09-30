@@ -14,17 +14,20 @@ export class MyCard extends LitElement {
 
   constructor() {
     super();
-    this.imageSource = "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQRoBD_MdWpXJJVGrQdSy6aejdo67OnGB1ZLCOJjRuXaKbASuf_KNuR8HKtSwCcsY_7E0Nd3GzFzASkMcc2vLTqHU_vQq-nUEqWyYvBgQ"
-    this.title = "Interesting info"
-    this.header = "Kuwait Towers"
-    this.details = "The kuwait Towers are a group of three thin towers in the Kuwait City, standing on a promontory into the arabian gulf. there were the sixth and last group in the larger Kuwait water Towers system of 34 towers and were built in a style considerably different from the five other groups."
+    this.imageSource = ""
+    this.title = ""
+    this.header = ""
+    this.details = ""
     this.count = 0;
+    this.fancy = false;
+    this.description = "hello I'm details"
   }
 
   static get styles() {
     return css`
       :host {
-        display: block;
+        display: inline-block;
+        
       }
       h2{
         font-size: 2em;
@@ -32,35 +35,34 @@ export class MyCard extends LitElement {
         padding:0;
       }
       h3{
-        margin: 8pm 0;
+        margin: 8px 0;
       }
-      .card-image{
-        width: 200px;
-        
-      }
+     
+      
       .card{
         font-size: 1em;
-        display: inline-flex;
+        
         border: 2px solid grey;
         padding: 8px;
         margin:8px;
-        background-color: cyan;
+       
+        
         transition: .6s all ease-in-out;
       }
-      .card-text {
-        width: 200px;
-        padding: 0 8px 8px 8px;
+      .card-details {
+        padding: 8px 8px 8px 8px;
         color: black;
         background-color: white;
-        margin: 0 0 0 8px;
-        height:300px;
-        overflow: auto;
+        margin: 0 0 0 0;
+        width: 200px;      
       }
-      :host([fancy]) .card {
-        background-color: orange;
-        color: cyan;
-        border: 10px solid green;
-        margin: 100px;
+      :host([fancy]) {
+      
+        background-color: pink;
+        border: 4px solid fuchsia;
+        box-shadow: 10px 5px 5px red;
+        
+        
       }
       
       .card:hover,.card:focus-within{
@@ -69,8 +71,7 @@ export class MyCard extends LitElement {
         outline-offset: 16px;
       }
       .card-image{
-        width: 200px;
-        height: 100%;
+        width: 250px;
       }
       button {
         margin: 8px;
@@ -82,18 +83,20 @@ export class MyCard extends LitElement {
   }
 
   render() {
-    return html`<div class="card-list"><h2>${this.header}</h2><div class="card">
+    return html`<div class="card">
       <img class="card-image" src=${this.imageSource}/>
-      <div class="card-text">
-        <h3 class="card-title">${this.title}</h3>
-        <div class="card-details">
-          <p>${this.details}</p>
+      <slot><h3 class="card-title">${this.title}</h3></slot>
+      <slot class="card-details">${this.details}</p></slot>
+      <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+        <summary>Description</summary>
+        <div>
+          <slot>${this.description}</slot>
         </div>
+      </details> 
+      <div class="counter">
         <button @click="${this.increamentCount}">Increase Count</button>
-        <div class="counter">Count: ${this.count}</div>
-      </div>
-    </div>
-    </div>`;
+        Count: ${this.count}</div>
+  </div>`;
   }
 
   static get properties() {
@@ -102,12 +105,23 @@ export class MyCard extends LitElement {
       imageSource: {type: String},
       details:{type: String},
       header: {type: String},
-      count: {type:Number}
+      count: {type:Number},
+      fancy: { type: Boolean, reflect: true},
+      description: {type:String}
 
     };
   }
   increamentCount() {
     this.count += 1;
+  }
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open"){
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 }
 
